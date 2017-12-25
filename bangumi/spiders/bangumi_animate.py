@@ -5,7 +5,7 @@ import re
 from collections import OrderedDict
 
 from logbook import Logger
-from scrapy import Selector
+from scrapy import Selector, Request
 
 from bangumi import db
 from bangumi.Item.bangumi.animate import *
@@ -13,6 +13,7 @@ from bangumi.Item.bangumi.pic import *
 from bangumi.spiders import SpiderDebug
 
 logging = Logger("Animate Spider")
+
 
 class BangumiAnimateSpider(scrapy.Spider):
     def __init__(self, **kwargs):
@@ -102,8 +103,6 @@ class BangumiAnimateSpider(scrapy.Spider):
                                  callback=self.parse_cast)
         request.meta['animate_data'] = animate
         # 获取番剧剧集信息
-        # yield Request('http://bangumi.tv/subject/%s/ep' % animate_bangumi_id, callback=self.parseEP)
-
         return request
 
     def parse_cast(self, response):

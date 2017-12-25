@@ -63,7 +63,7 @@ class BangumiIDPipelines(object):
                 else:
                     subject['update'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                     subject['create'] = data['create']
-                    self.collection.update_one({"bangumi_id": str(subject["bangumi_id"])}, {"$set":dict(subject)})
+                    self.collection.update_one({"bangumi_id": str(subject["bangumi_id"])}, {"$set": dict(subject)})
         return item
 
 
@@ -128,14 +128,11 @@ def save_to_database(item, collection):
     model = dict(item)
     if 'cover_prefix' in model:
         model.pop('cover_prefix')
-    model['updated'] = datetime.datetime.now()
+    model['update'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     exist_model = collection.find_one({'bangumi_id': model['bangumi_id']})
     if exist_model is not None:
-        model['created'] = exist_model['created']
+        model['create'] = exist_model['create']
         collection.replace_one({'_id': exist_model['_id']}, model, upsert=True)
     else:
-        model['created'] = datetime.datetime.now()
-        try:
-            collection.insert(model)
-        except:
-            pass
+        model['create'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        collection.insert(model)
