@@ -6,11 +6,11 @@
 # See: http://doc.scrapy.org/en/latest/topics/item-pipeline.html
 import datetime
 
-from scrapy import Request
+from logbook import Logger
+from scrapy import Request, Spider
 from scrapy.pipelines.images import ImagesPipeline
 
 from bangumi import db
-from bangumi.Item.anidb.animate import AnidbAnimate
 from bangumi.Item.bangumi.animate import AnimateItem
 from bangumi.Item.bangumi.book import BookItem
 from bangumi.Item.bangumi.character import Character
@@ -18,6 +18,7 @@ from bangumi.Item.bangumi.game import Game
 from bangumi.Item.bangumi.music import Music
 from bangumi.Item.bangumi.person import Person
 from bangumi.items import BangumiIdListItem
+from bangumi.spiders.bangumi_id import BangumiIdSpider
 
 
 class BangumiPipeline(object):
@@ -47,12 +48,23 @@ class BangumiGamePipelines(object):
 
 class BangumiIDPipelines(object):
     def __init__(self):
-        self.collection = db['BangumiID']
+        self.collection = db['Id']
 
-    def process_item(self, item, spider):
+    def process_item(self, item: BangumiIdListItem, spider: BangumiIdSpider):
+        log = Logger('Bangumi ID Pipeline')
+
         if isinstance(item, BangumiIdListItem):
             for subject in item['bangumi_data']:
-                save_to_database(subject, self.collection)
+                data = self.collection.find_one({"bangumi_id": f'{ subject["bangumi_id"] }'})
+                if data is None:
+                    subject['create'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                    subject['update'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                    self.collection.insert_one(dict(subject))
+                else:
+                    log.debug("update bangumi id")
+                    subject['update'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                    subject['create'] = data['create']
+                    self.collection.update_one({"bangumi_id": f'{ subject["bangumi_id"] }'}, dict(subject))
         return item
 
 
@@ -65,15 +77,7 @@ class BangumiPersonPipelines(object):
             save_to_database(item, self.collection)
 
         return item
-class AnidbAnimatePipelines(object):
-    def __init__(self):
-        self.collection = db['AniDB_Animate']
-    def process_item(self, item, spider):
-        if isinstance(item, AnidbAnimate):
-            print('---------------------------')
-            print(item)
-            save_anidb_to_database(item, self.collection)
-        return item
+
 
 class BangumiCharacterPipelines(object):
     def __init__(self):
@@ -87,8 +91,7 @@ class BangumiCharacterPipelines(object):
 
 class ImageDownloadPipeline(ImagesPipeline):
     def get_media_requests(self, item, info):
-        if  'cover_url' in item and len(item['cover_url']) != 0:
-            print("%s_%s" % (item['bangumi_id'], item['cover_prefix']))
+        if 'cover_url' in item and len(item['cover_url']) != 0:
             return Request(url=item['cover_url'],
                            meta={'image_name': "%s_%s" % (item['bangumi_id'], item['cover_prefix'])})
         return
@@ -137,17 +140,3 @@ def save_to_database(item, collection):
             collection.insert(model)
         except:
             pass
-
-def save_anidb_to_database(item, collection):
-    model = dict(item)
-    if 'cover_prefix' in model:
-        model.pop('cover_prefix')
-    model['updated'] = datetime.datetime.now()
-    exist_model = collection.find_one({'ani_id': model['ani_id']})
-    if exist_model is not None:
-        model['created'] = exist_model['created']
-        collection.replace_one({'_id': exist_model['_id']}, model, upsert=True)
-    else:
-        model['created'] = datetime.datetime.now()
-
-        collection.insert(model)

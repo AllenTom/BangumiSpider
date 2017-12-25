@@ -123,3 +123,4 @@ bangumi/spiders/bangumi_music_id.py
 !/bangumi/spiders/bangumi_book_id.py
 !/bangumi/spiders/bangumi_music_id.py
 /list.txt
+SpiderKeeper.db

@@ -18,8 +18,8 @@ class BangumiIdItem(scrapy.Item):
     bangumi_id = scrapy.Field()
     bangumi_type = scrapy.Field()
     bangumi_name = scrapy.Field()
-    created = scrapy.Field()
-    updated = scrapy.Field()
+    create = scrapy.Field()
+    update = scrapy.Field()
 
 
 class BangumiIdListItem(scrapy.Item):

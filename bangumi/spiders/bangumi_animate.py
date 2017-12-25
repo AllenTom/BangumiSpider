@@ -4,6 +4,7 @@ import datetime
 import re
 from collections import OrderedDict
 
+from logbook import Logger
 from scrapy import Selector
 
 from bangumi import db
@@ -11,21 +12,21 @@ from bangumi.Item.bangumi.animate import *
 from bangumi.Item.bangumi.pic import *
 from bangumi.spiders import SpiderDebug
 
+logging = Logger("Animate Spider")
 
 class BangumiAnimateSpider(scrapy.Spider):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        if SpiderDebug != True:
+        if not SpiderDebug:
             self.collection = db['BangumiID']
             id_list = [subject['bangumi_id'] for subject in self.collection.find({"bangumi_type": "animate"})]
-            print(len(id_list))
             spided_id = [animate['bangumi_id'] for animate in db['Animate'].find()]
             for animate_id in spided_id:
                 id_list.remove(animate_id)
             self.start_urls = ['http://bangumi.tv/subject/%s' % subject_id for subject_id in
                                id_list]
         else:
-            self.start_urls = ['http://bangumi.tv/subject/132734']
+            self.start_urls = ['http://bangumi.tv/subject/218707']
 
     name = "bangumi_animate"
     allowed_domains = ["bangumi.tv"]
@@ -96,12 +97,13 @@ class BangumiAnimateSpider(scrapy.Spider):
                     animate['info'][animate_info_title].append(value)
         tag_field = response.xpath('//*[@id="subject_detail"]//div[@class="inner"]/a/text()')
         animate['tag'] = [tag.extract() for tag in tag_field]
-
+        logging.debug(animate)
         request = scrapy.Request('http://bangumi.tv/subject/%s/persons' % animate['bangumi_id'],
                                  callback=self.parse_cast)
         request.meta['animate_data'] = animate
         # 获取番剧剧集信息
         # yield Request('http://bangumi.tv/subject/%s/ep' % animate_bangumi_id, callback=self.parseEP)
+
         return request
 
     def parse_cast(self, response):
@@ -113,7 +115,6 @@ class BangumiAnimateSpider(scrapy.Spider):
             cast['bangumi_id'] = get_field_value(cast_item_field.xpath('.//h2/a').re('/person/(\d+)'))
             cast['japan_name'] = cast_item_field.xpath('.//h2/a/text()').extract()[0].replace(" / ", "")
             cast['chinese_name'] = get_field_value(cast_item_field.xpath('.//h2/a/span/text()').extract())
-            print(type(cast['chinese_name']))
             cast['job'] = list()
             for job in cast_item_field.xpath('.//div[@class = "prsn_info"]//span[@class = "badge_job"]/text()'):
                 cast['job'].append(job.extract())

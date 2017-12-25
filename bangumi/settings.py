@@ -91,7 +91,6 @@ ITEM_PIPELINES = {
     # 'bangumi.pipelines.BangumiAnimateCharacterPipelines': 200,
     'bangumi.pipelines.ImageDownloadPipeline': 400,  # 下载图片
     'bangumi.pipelines.BangumiCharacterPipelines': 100,  # 保存角色信息
-    'bangumi.pipelines.AnidbAnimatePipelines': 101,  # 保存角色信息
     'bangumi.pipelines.BangumiIDPipelines': 2,  # 保存ID
     'bangumi.pipelines.BangumiGamePipelines': 3,  # 保存ID
     'bangumi.pipelines.BangumiAnimatePipelines': 298,  # 保存Animate信息
@@ -121,7 +120,7 @@ COOKIES_ENABLES = True
 AUTOTHROTTLE_DEBUG = False
 DNSCACHE_ENABLED = True
 ROBOTSTXT_OBEY = False
-LOG_LEVEL = 'INFO'
+LOG_LEVEL = 'ERROR'
 LOG_SHORT_NAMES = True
 # Enable and configure HTTP caching (disabled by default)
 # See http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html#httpcache-middleware-settings
