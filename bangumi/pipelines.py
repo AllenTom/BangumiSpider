@@ -55,16 +55,15 @@ class BangumiIDPipelines(object):
 
         if isinstance(item, BangumiIdListItem):
             for subject in item['bangumi_data']:
-                data = self.collection.find_one({"bangumi_id": f'{ subject["bangumi_id"] }'})
+                data = self.collection.find_one({"bangumi_id": str(subject["bangumi_id"])})
                 if data is None:
                     subject['create'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                     subject['update'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                     self.collection.insert_one(dict(subject))
                 else:
-                    log.debug("update bangumi id")
                     subject['update'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                     subject['create'] = data['create']
-                    self.collection.update_one({"bangumi_id": f'{ subject["bangumi_id"] }'}, dict(subject))
+                    self.collection.update_one({"bangumi_id": str(subject["bangumi_id"])}, {"$set":dict(subject)})
         return item
 
 
