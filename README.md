@@ -1,11 +1,11 @@
-##Bangumi Spider
+## Bangumi Spider
 该项目由是对网站[Bangumi 番组计划](http://bangumi.tv/) 网站的爬虫
 
-###需求
+### 需求
 1. Python3.6  
 2. Scrapy
 3. MongoDB
-###爬取器(Spider)
+### 爬取器(Spider)
 爬取动画，音乐等信息时会下载其封面
 1. bangumi_animate_id 爬取需要的Animate(动画)的ID
 2. bangumi_music_id 爬取需要的Music（音乐）的ID
@@ -19,11 +19,11 @@
 4. bangumi_person 爬取需要的Person（三次元人物）
 5. bangumi_character 爬取需要的Character（二次元人物）
 6. bangumi_game 爬取需要的Game（游戏）
-###注意事项
+### 注意事项
 1. 请在init中配置MongoDB相关的连接数据
 2. 请在setting中配置图片下载路径
 3. 默认打开代理，可以在setting中关闭，根目录下的list文件中写入代理地址作为代理池
-###License（MIT）
+### License（MIT）
 ```
 MIT License
 
