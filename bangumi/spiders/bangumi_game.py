@@ -15,7 +15,7 @@ class BangumiGameSpider(scrapy.Spider):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         if not SpiderDebug:
-            self.collection = db['BangumiID']
+            self.collection = db['Id']
             id_list = [subject['bangumi_id'] for subject in self.collection.find({"bangumi_type": "game"})]
             spided_id = [game['bangumi_id'] for game in db['Game'].find()]
             for game_id in spided_id:

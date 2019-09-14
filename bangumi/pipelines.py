@@ -7,7 +7,7 @@
 import datetime
 
 from logbook import Logger
-from scrapy import Request, Spider
+from scrapy import Request
 from scrapy.pipelines.images import ImagesPipeline
 
 from bangumi import db
@@ -49,7 +49,6 @@ class BangumiGamePipelines(object):
 class BangumiIDPipelines(object):
     def __init__(self):
         self.collection = db['Id']
-
     def process_item(self, item: BangumiIdListItem, spider: BangumiIdSpider):
         log = Logger('Bangumi ID Pipeline')
 

@@ -17,7 +17,7 @@ class BangumiMusicSpider(scrapy.Spider):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         if not SpiderDebug:
-            self.collection = db['BangumiID']
+            self.collection = db['Id']
             id_list = [subject['bangumi_id'] for subject in self.collection.find({"bangumi_type": "music"})]
             spided_id = [music['bangumi_id'] for music in db['Music'].find()]
             for music_id in spided_id:
@@ -74,7 +74,7 @@ class BangumiMusicSpider(scrapy.Spider):
             else:
                 for value in item.xpath('.//a/text()').extract():
                     music['info'][music_info_title].append(value)
-        tag_field = response.xpath('//*[@id="subject_detail"]//div[@class="inner"]/a/text()')
+        tag_field = response.xpath('//*[@class="subject_tag_section"]//span/text()')
         music['tag'] = [tag.extract() for tag in tag_field]
 
         request = Request('http://bangumi.tv/subject/%s/ep' % music['bangumi_id'], callback=self.parse_music_tract)

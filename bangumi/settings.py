@@ -53,7 +53,7 @@ NEWSPIDER_MODULE = 'bangumi.spiders'
 
 DOWNLOADER_MIDDLEWARES = {
     'scrapy.downloadermiddlewares.retry.RetryMiddleware': 90,
-    'bangumi.RandomProxy': 100,
+    # 'bangumi.RandomProxy': 100,
     'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 110,
     'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware': 300,
     'bangumi.middlewares.RandomUserAgentMiddleware': 400,
@@ -99,7 +99,7 @@ ITEM_PIPELINES = {
     'bangumi.pipelines.BangumiMusicPipelines': 301,  # 保存专辑信息
 
 }
-IMAGES_STORE = "H:\\download_img"
+IMAGES_STORE = "/home/download"
 IMAGES_EXPIRES = 90  # 过期天数
 IMAGES_MIN_HEIGHT = 0  # 图片的最小高度
 IMAGES_MIN_WIDTH = 0  # 图片的最小宽度
@@ -119,7 +119,7 @@ COOKIES_ENABLES = True
 # Enable showing throttling stats for every response received:
 AUTOTHROTTLE_DEBUG = False
 DNSCACHE_ENABLED = True
-ROBOTSTXT_OBEY = False
+ROBOTSTXT_OBEY = True
 LOG_LEVEL = 'INFO'
 LOG_SHORT_NAMES = True
 # Enable and configure HTTP caching (disabled by default)

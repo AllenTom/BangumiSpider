@@ -18,6 +18,7 @@ class AnimateItem(scrapy.Item):
     episode_count = scrapy.Field()
     created = scrapy.Field()
     updated = scrapy.Field()
+    rate = scrapy.Field()
 
 class AnimateEpisodeItem(scrapy.Item):
     number = scrapy.Field()
@@ -36,9 +37,11 @@ class AnimateCharacterItem(scrapy.Item):
     bangumi_id = scrapy.Field()
     japan_name = scrapy.Field()
     chinese_name = scrapy.Field()
+    icon_url = scrapy.Field()
     job = scrapy.Field()
     info = scrapy.Field()
     cv = scrapy.Field()
+
 
 
 class AnimateCharacterInfoItem(scrapy.Item):
@@ -50,6 +53,7 @@ class AnimateCharacterCVItem(scrapy.Item):
     japan_name = scrapy.Field()
     chinese_name = scrapy.Field()
     bangumi_id = scrapy.Field()
+    icon_url = scrapy.Field()
 
 
 class AnimateCategoryItem(scrapy.Item):

@@ -6,15 +6,13 @@ from scrapy import Selector
 
 from bangumi import db
 from bangumi.Item.bangumi.person import Person, PersonCharacter, PersonCharacterVoiceWork
-from bangumi.database.MongoModel import BangumiID
-from bangumi.database.person import Person as PersonDB
 from bangumi.spiders.bangumi_animate import get_field_value
 
 
 class BangumiCvSpider(scrapy.Spider):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.collection = db['BangumiID']
+        self.collection = db['Id']
         id_list = [subject['bangumi_id'] for subject in self.collection.find({"bangumi_type": "person"})]
         spided_id = [person['bangumi_id'] for person in db['Person'].find()]
         for person_id in spided_id:

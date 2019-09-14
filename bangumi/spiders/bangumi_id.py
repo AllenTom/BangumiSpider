@@ -20,7 +20,7 @@ class BangumiIdSpider(scrapy.Spider):
 
     def __init__(self, **kwargs):
         logging.log(logging.DEBUG, f'{self.subject_type} subject spider,id type is {self.id_type}')
-        self.start_urls = [f'http://bangumi.tv/{self.subject_type}/browser?page=%s' % page for page in range(1, 20)]
+        self.start_urls = [f'http://bangumi.tv/{self.subject_type}/browser?sort=rank&page=%s' % page for page in range(1, 20)]
         super().__init__(**kwargs)
 
     def parse(self, response: Response):

@@ -1,11 +1,5 @@
 # -*- coding: utf-8 -*-
-import re
 
-import scrapy
-from scrapy import Selector
-
-from bangumi.database.MongoModel import BangumiID
-from bangumi.items import BangumiIdListItem, BangumiIdItem
 from bangumi.spiders.bangumi_id import BangumiIdSpider
 
 

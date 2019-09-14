@@ -3,11 +3,11 @@ def print_animate(animate):
     print("动画名称 : %s" % animate['name'])
     print("简介\n  %s" % animate['summary'])
     print('---------------------------------动画信息------------------------------')
-    for info_item in animate['info']:
-        print(info_item['title'])
-        for value in info_item['values']:
-            print(str(value))
-        print('\n')
+    # for info_item in animate['info']:
+    #     print(info_item['title'])
+    #     for value in info_item['values']:
+    #         print(str(value))
+    #     print('\n')
     print('---------------------------------制作组信息------------------------------')
     for cast in animate['casts']:
         # print(cast['bangumi_person_id'])

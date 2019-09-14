@@ -1,0 +1,30 @@
+version: "3"
+services:
+  spider:
+    build:
+      context: .
+    volumes:
+      - ./download:/home/download
+    environment:
+      - MONGO_USERNAME=
+      - MONGO_PASSWORD=
+      - MONGO_HOST=database
+      - MONGO_PORT=27017
+    networks:
+      - bangumi-net
+    tty: true
+  database:
+    image: mongo
+    environment:
+      - MONGO_DATA_DIR=/data/db
+      - MONGO_INITDB_ROOT_USERNAME=
+      - MONGO_INITDB_ROOT_PASSWORD=
+    ports:
+      - 27018:27017
+    volumes:
+      - ./data:/data/db
+    networks:
+      - bangumi-net
+networks:
+  bangumi-net:
+    driver: bridge

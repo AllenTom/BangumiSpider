@@ -5,7 +5,7 @@ import re
 from collections import OrderedDict
 
 from logbook import Logger
-from scrapy import Selector, Request
+from scrapy import Selector
 
 from bangumi import db
 from bangumi.Item.bangumi.animate import *
@@ -19,7 +19,7 @@ class BangumiAnimateSpider(scrapy.Spider):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         if not SpiderDebug:
-            self.collection = db['BangumiID']
+            self.collection = db['Id']
             id_list = [subject['bangumi_id'] for subject in self.collection.find({"bangumi_type": "animate"})]
             spided_id = [animate['bangumi_id'] for animate in db['Animate'].find()]
             for animate_id in spided_id:
@@ -27,7 +27,7 @@ class BangumiAnimateSpider(scrapy.Spider):
             self.start_urls = ['http://bangumi.tv/subject/%s' % subject_id for subject_id in
                                id_list]
         else:
-            self.start_urls = ['http://bangumi.tv/subject/218707']
+            self.start_urls = ['http://bangumi.tv/subject/265708']
 
     name = "bangumi_animate"
     allowed_domains = ["bangumi.tv"]
@@ -50,6 +50,9 @@ class BangumiAnimateSpider(scrapy.Spider):
         animate['cover_prefix'] = 'animate'
         animate['cover_url'] = 'http:%s' % get_field_value(
             response.xpath('//*[@id="bangumiInfo"]/div/div/a/@href').extract())
+        #Get rate
+        # print(response.selector.xpath('//*[@class="number"]'))
+        animate['rate'] = float(get_field_value(response.selector.xpath('//*[@property="v:average"]/text()').extract()))
         # Get animate info
         animate['info'] = dict()
         for item in Selector(response=response).xpath('//*[@id="infobox"]/li'):
@@ -96,7 +99,7 @@ class BangumiAnimateSpider(scrapy.Spider):
             else:
                 for value in item.xpath('.//a/text()').extract():
                     animate['info'][animate_info_title].append(value)
-        tag_field = response.xpath('//*[@id="subject_detail"]//div[@class="inner"]/a/text()')
+        tag_field = response.xpath('//*[@class="subject_tag_section"]//span/text()')
         animate['tag'] = [tag.extract() for tag in tag_field]
         logging.debug(animate)
         request = scrapy.Request('http://bangumi.tv/subject/%s/persons' % animate['bangumi_id'],
@@ -131,6 +134,7 @@ class BangumiAnimateSpider(scrapy.Spider):
             character_item = AnimateCharacterItem()
             character_item['bangumi_id'] = get_field_value(character.re('<a href="/character/(\d+)" class="l">'))
             character_item['japan_name'] = get_field_value(character.xpath('./h2/a/text()').extract())
+            character_item['icon_url'] = get_field_value(character.xpath('..//*[@class="avatar ll"]/@src').extract())
             try:
                 character_item['chinese_name'] = get_field_value(character.xpath('./h2/span/text()').extract())[3:]
             except:
@@ -148,6 +152,7 @@ class BangumiAnimateSpider(scrapy.Spider):
                 cv['bangumi_id'] = cv_list.re('<a href="/person/(\d+)" class="l">')[0]
                 cv['japan_name'] = get_field_value(cv_list.xpath('./a/text()').extract())
                 cv['chinese_name'] = get_field_value(cv_list.xpath('./small/text()').extract())
+                cv['icon_url'] = get_field_value(cv_list.xpath('..//*[@class="avatar ll"]/@src').extract())
                 character_item['cv'].append(cv)
             animate['character'].append(character_item)
 

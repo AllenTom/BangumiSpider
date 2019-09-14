@@ -1,5 +1,4 @@
 import scrapy
-from mongoengine import *
 
 
 class GameCast(scrapy.Item):

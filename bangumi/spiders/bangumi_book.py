@@ -7,8 +7,6 @@ from scrapy import Selector
 
 from bangumi import db
 from bangumi.Item.bangumi.book import BookItem
-from bangumi.database.MongoModel import BangumiID
-from bangumi.database.book import Book
 from bangumi.spiders import SpiderDebug
 from bangumi.spiders.bangumi_animate import get_field_value
 
@@ -17,7 +15,7 @@ class BangumiBookSpider(scrapy.Spider):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         if not SpiderDebug:
-            self.collection = db['BangumiID']
+            self.collection = db['Id']
             id_list = [subject['bangumi_id'] for subject in self.collection.find({"bangumi_type": "book"})]
             spided_id = [book['bangumi_id'] for book in db['Book'].find()]
             for book_id in spided_id:
@@ -41,7 +39,7 @@ class BangumiBookSpider(scrapy.Spider):
         book['cover_url'] = 'http:%s' % get_field_value(
             root_selector.xpath('//*[@id="bangumiInfo"]/div/div/a/@href').extract())
         book['cover_prefix'] = 'book'
-        tag_field = response.xpath('//*[@id="subject_detail"]//div[@class="inner"]/a/text()')
+        tag_field = response.xpath('//*[@class="subject_tag_section"]//span/text()')
         book['tag'] = [tag.extract() for tag in tag_field]
         book_info_selector = Selector(response=response).xpath('//*[@id="infobox"]/li')
         book['info'] = dict()
