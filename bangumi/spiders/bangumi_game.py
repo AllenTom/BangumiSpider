@@ -85,9 +85,9 @@ class BangumiGameSpider(scrapy.Spider):
         request = Request(url='http://bangumi.tv/subject/%s/characters' % game['bangumi_id'],
                           callback=self.parse_game_character)
         request.meta['game'] = game
-        print(game['chinese_name'])
-        print(game['release_date'] if game['release_date'] is not None else "No date")
-        print(game['platform'])
+        # print(game['chinese_name'])
+        # print(game['release_date'] if game['release_date'] is not None else "No date")
+        # print(game['platform'])
         return request
 
     def parse_game_character(self, response):

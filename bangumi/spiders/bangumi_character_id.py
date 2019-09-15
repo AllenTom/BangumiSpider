@@ -24,10 +24,10 @@ class BangumiCharacterIdSpider(scrapy.Spider):
                 self.start_urls.append('http://bangumi.tv/character?orderby=collects&page=%s' % page)
 
         character_id_list = list()
-        for character_field in Selector(response).xpath('//div[@class="light_odd clearit"]//h2'):
+        for character_field in response.selector.xpath('//div[@class="light_odd  clearit"]//h3//a'):
             character_id_list.append(BangumiIdItem(
-                bangumi_id=get_field_value(character_field.xpath('./a/@href').re('/character/(\d+)')),
+                bangumi_id=get_field_value(character_field.xpath('./@href').re('/character/(\d+)')),
                 bangumi_type="character",
-                bangumi_name=get_field_value(character_field.xpath('./a/text()').extract())
+                bangumi_name=get_field_value(character_field.xpath('./text()').extract())
             ))
         return BangumiIdListItem(bangumi_data=character_id_list)

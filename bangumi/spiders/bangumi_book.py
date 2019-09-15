@@ -62,7 +62,7 @@ class BangumiBookSpider(scrapy.Spider):
                 book['ISBN'] = get_field_value(item.xpath('./text()').extract())
                 continue
             elif book_info_title == '页数':
-                book['page'] = int(get_field_value(item.xpath('./text()').extract()))
+                book['page'] = int(get_field_value(item.xpath('./text()').re('(\d+)')))
                 continue
 
             book['info'][book_info_title] = list()

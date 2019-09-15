@@ -26,10 +26,10 @@ class BangumiPersonIdSpider(scrapy.Spider):
             print("get max page: %s" % self.max_page)
 
         person_id_list = list()
-        for person_field in Selector(response=response).xpath('//div[@class="light_odd clearit"]//h2'):
+        for person_field in response.selector.xpath('//div[@class="light_odd  clearit"]//h3//a'):
             person_id_list.append(BangumiIdItem(
-                bangumi_id=get_field_value(person_field.xpath('./a/@href').re('/person/(\d+)')),
+                bangumi_id=get_field_value(person_field.xpath('./@href').re('/person/(\d+)')),
                 bangumi_type="person",
-                bangumi_name=get_field_value(person_field.xpath('./a/text()').extract())
+                bangumi_name=get_field_value(person_field.xpath('./text()').extract())
             ))
         return BangumiIdListItem(bangumi_data=person_id_list)
