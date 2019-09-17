@@ -31,9 +31,10 @@
 2. 请在setting中配置图片下载路径
 3. 请先爬取ID才能爬取具体内容，例如先爬取动画ID才能爬取具体内容
 
+### 数据API
+已实现简单的爬虫数据API，详见[Bangumi-Spider-API](https://github.com/AllenTom/Bangumi-Spider-API)
 ### TODO
 1. 网页端控制爬虫。
-2. 数据RESTful API的支持。
 ### License（MIT）
 ```
 MIT License
